@@ -64,6 +64,7 @@ class Cascade_Network(nn.Module):
     def forward(self,x):
         x = F.relu(self.input_fcn(x))
         x = self.output_fcn(x)
+        x = F.softmax(x)
         return x
 
 

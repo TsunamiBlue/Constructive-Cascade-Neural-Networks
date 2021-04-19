@@ -3,6 +3,9 @@
     <words>
       <w>dataloader</w>
       <w>dataset</w>
+      <w>datasets</w>
+      <w>preprocessing</w>
+      <w>sars</w>
     </words>
   </dictionary>
 </component>
