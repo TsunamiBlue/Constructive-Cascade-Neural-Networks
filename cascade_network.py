@@ -33,8 +33,8 @@ def data_preprocessing(data_path):
             data = torch.from_numpy(np.array(data))
             test_data = torch.from_numpy(np.array(test_data))
 
-            labels = torch.full((data.shape[0],1),label)
-            test_labels = torch.full((test_data.shape[0],1),label)
+            labels = torch.full((data.shape[0],1),label,dtype=torch.long)
+            test_labels = torch.full((test_data.shape[0],1),label,dtype=torch.long)
 
             current_dataset = Data.TensorDataset(data,labels)
             current_test_dataset = Data.TensorDataset(test_data,test_labels)
@@ -46,8 +46,8 @@ def data_preprocessing(data_path):
     ans_dataset = Data.ConcatDataset(datasets)
     ans_test_dataset = Data.ConcatDataset(test_datasets)
 
-    ans_dataloader = Data.DataLoader(ans_dataset,shuffle=True,batch_size=1)
-    test_dataloader = Data.DataLoader(ans_test_dataset,shuffle=True,batch_size=1)
+    ans_dataloader = Data.DataLoader(ans_dataset,shuffle=True,batch_size=10)
+    test_dataloader = Data.DataLoader(ans_test_dataset,shuffle=True,batch_size=10)
 
     return ans_dataloader,test_dataloader
 
@@ -57,14 +57,20 @@ class Cascade_Network(nn.Module):
     def __init__(self):
         super(Cascade_Network,self).__init__()
         self.input_fcn = nn.Linear(23,10)
+        # self.cascade_layer = nn.Linear(10,10)
         self.output_fcn = nn.Linear(10,4)
-        self.hidden_layer = None
+        # self.hidden_layer = None
+
+        self.cascade_layers = []
+        for i in range(10):
+            self.cascade_layers.append(nn.Linear(10,10))
+
 
 
     def forward(self,x):
         x = F.relu(self.input_fcn(x))
         x = self.output_fcn(x)
-        x = F.softmax(x)
+        x = F.softmax(x,dim=1)
         return x
 
 
@@ -92,16 +98,14 @@ if __name__ == "__main__":
         for batch_idx, batch_data in enumerate(train_dataloader,start=0):
 
             data,labels = batch_data
-            labels = torch.tensor(labels,dtype=torch.long)[0]
-            # print(labels)
             optimizer.zero_grad()
             forward_result = cascade_network(data)
-            loss = loss_CE(forward_result,labels)
+            loss = loss_CE(forward_result,labels.squeeze())
             loss.backward()
             optimizer.step()
             current_loss += loss.item()
 
-            if batch_idx %500 == 499:
+            if batch_idx %100 == 99:
                 print(f"epoch {epoch+1} batch No.{batch_idx+1} loss: {current_loss/100}")
                 loss_log.append(current_loss/100)
                 current_loss = 0
@@ -111,11 +115,11 @@ if __name__ == "__main__":
     for batch_idx, batch_data in enumerate(test_dataloader,start=0):
         data,labels = batch_data
         prediction = cascade_network(data)
-        ans = np.argmax(prediction.detach().numpy())
+        ans = torch.tensor([np.argmax(each.detach().numpy()) for each in prediction])
         # print(ans,int(labels.detach().numpy()[0][0]))
-        if ans == labels:
-            true_postive+=1
-        total+=1
+        if (ans == labels.squeeze()).all():
+            true_postive+= labels.shape[0]
+        total+=labels.shape[0]
 
 
     print(f"Final test accuracy: {true_postive*100/total} %")
