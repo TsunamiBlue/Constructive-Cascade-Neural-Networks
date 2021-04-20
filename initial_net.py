@@ -54,39 +54,24 @@ def data_preprocessing(data_path):
 
 class Cascade_Network(nn.Module):
 
-    def __init__(self,max_used_cascade):
+    def __init__(self):
         super(Cascade_Network,self).__init__()
         self.input_fcn = nn.Linear(23,10)
+        # self.cascade_layer = nn.Linear(10,10)
         self.output_fcn = nn.Linear(10,4)
+        # self.hidden_layer = None
 
-        self.used_casacade = 0
         self.cascade_layers = []
+        for i in range(10):
+            self.cascade_layers.append(nn.Linear(10,10))
 
 
 
-    def forward(self,x,current_used_cascade):
-        # x = F.relu(self.input_fcn(x))
-        # x = self.output_fcn(x)
-        # x = F.softmax(x,dim=1)
-
+    def forward(self,x):
         x = F.relu(self.input_fcn(x))
-        x = F.softmax(x, dim=1)
-        x_hidden = []
-        if self.used_casacade != 0:
-            for idx, layer in enumerate(self.cascade_layers):
-
-                    tmp = self.cascade_layers[idx](x)
-
-
+        x = self.output_fcn(x)
+        x = F.softmax(x,dim=1)
         return x
-
-
-    def add_cascade(self):
-
-        self.cascade_layers.append(nn.Linear(10*(self.used_casacade+1),10))
-        self.used_casacade +=1
-
-        return
 
 
 
@@ -99,7 +84,7 @@ if __name__ == "__main__":
     print(train_dataloader.dataset.__len__())
     print(np.array(list(enumerate(train_dataloader.dataset))).shape)
     # print(np.array(list(enumerate(dataloader.dataset)))[0][1])
-    cascade_network = Cascade_Network(3)
+    cascade_network = Cascade_Network()
     loss_CE=nn.CrossEntropyLoss()
     optimizer = optim.SGD(
         cascade_network.parameters(),
@@ -114,7 +99,7 @@ if __name__ == "__main__":
 
             data,labels = batch_data
             optimizer.zero_grad()
-            forward_result = cascade_network(data,1)
+            forward_result = cascade_network(data)
             loss = loss_CE(forward_result,labels.squeeze())
             loss.backward()
             optimizer.step()
@@ -129,20 +114,16 @@ if __name__ == "__main__":
     total = 0
     for batch_idx, batch_data in enumerate(test_dataloader,start=0):
         data,labels = batch_data
-        prediction = cascade_network(data,1)
+        prediction = cascade_network(data)
         ans = torch.tensor([np.argmax(each.detach().numpy()) for each in prediction])
-        # print(ans)
-        # print(labels.squeeze())
+        # print(ans,int(labels.detach().numpy()[0][0]))
         labels = labels.squeeze()
         for i in range(ans.shape[0]):
-            if ans[i]==labels[i]:
-                true_postive+=1
-            total+=1
+            if ans[i] == labels[i]:
+                true_postive += 1
+            total += 1
 
 
     print(f"Final test accuracy: {true_postive*100/total} %")
     print(f"ratio: {true_postive}/{total}")
     print("DONE.")
-
-
-

@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.utils.data as Data
 import torch.optim as optim
 import torch.nn.functional as F
-
+from add_neuron import addNeuron
 data_csv_path = ["SM_HighBP","SM_Normal","SM_pneumonia","SM_SARS"]
 
 
@@ -52,41 +52,56 @@ def data_preprocessing(data_path):
     return ans_dataloader,test_dataloader
 
 
+# Neural Network
 class Cascade_Network(nn.Module):
+    def __init__(self, input_size, num_classes, input_hidden_layers, hidden_hidden_layers, hidden_output_layers):
+        super().__init__()
+        self.n_hidden_layers = 0
+        self.fc1 = nn.Linear(input_size, num_classes)
+        # self.bn_input = nn.BatchNorm1d(10, momentum=0.9)
 
-    def __init__(self,max_used_cascade):
-        super(Cascade_Network,self).__init__()
-        self.input_fcn = nn.Linear(23,10)
-        self.output_fcn = nn.Linear(10,4)
+        # Init number of n*(n+3)/2 layers for use
+        self.input_hidden_layers = input_hidden_layers
+        self.hidden_hidden_layers = hidden_hidden_layers
+        self.hidden_output_layers = hidden_output_layers
 
-        self.used_casacade = 0
-        self.cascade_layers = []
+    def forward(self, x):
+        outL3_1 = self.fc1(x)  # part of L3 weights, correlation of input and output
+        if self.n_hidden_layers == 0:
+            return outL3_1
 
+        H = list()  # store connections of input classes and all hidden units (L1 weights and part of L3 weights)
 
+        # store the first connection (between input and first hidden unit)
+        H.append(F.leaky_relu(self.input_hidden_layers['0'](x)))
 
-    def forward(self,x,current_used_cascade):
-        # x = F.relu(self.input_fcn(x))
-        # x = self.output_fcn(x)
-        # x = F.softmax(x,dim=1)
+        if self.n_hidden_layers == 1:
+            for h in H:
+                # Get connections related to L2 Weights
+                outL2 = self.hidden_output_layers['0'](h)
+                return outL3_1 + outL2
 
-        x = F.relu(self.input_fcn(x))
-        x = F.softmax(x, dim=1)
-        x_hidden = []
-        if self.used_casacade != 0:
-            for idx, layer in enumerate(self.cascade_layers):
+        # if n_hidden_layers>1, do the following iteration
+        count1 = 0  # record the index of hidden_hidden_layers
+        for i in range(1, self.n_hidden_layers):
+            # build the current hidden unit, init with self.input_hidden
+            current_hidden_unit = F.leaky_relu(self.input_hidden_layers[str(i)](x))
+            c_list = list()
+            c_list.append(current_hidden_unit)
+            for h in H:
+                # if len(H)-count1 > 3:
+                #     previous_connection.detach()
+                current_hidden_unit += F.leaky_relu(self.hidden_hidden_layers[str(count1)](h))
+                count1 += 1
+            H.append(current_hidden_unit)
 
-                    tmp = self.cascade_layers[idx](x)
-
-
-        return x
-
-
-    def add_cascade(self):
-
-        self.cascade_layers.append(nn.Linear(10*(self.used_casacade+1),10))
-        self.used_casacade +=1
-
-        return
+        # Connect hidden unit to output
+        total_out = outL3_1
+        count2 = 0  # record the index of hidden_output_layers
+        for h in H:
+            total_out = total_out + self.hidden_output_layers[str(count2)](h)
+            count2 += 1
+        return total_out
 
 
 
@@ -99,13 +114,21 @@ if __name__ == "__main__":
     print(train_dataloader.dataset.__len__())
     print(np.array(list(enumerate(train_dataloader.dataset))).shape)
     # print(np.array(list(enumerate(dataloader.dataset)))[0][1])
-    cascade_network = Cascade_Network(3)
+
+    input_hidden_layers = nn.ModuleDict()
+    hidden_hidden_layers = nn.ModuleDict()
+    hidden_output_layers = nn.ModuleDict()
+
+    cascade_network = Cascade_Network(23,4,input_hidden_layers,hidden_hidden_layers,hidden_output_layers)
+    addNeuron(cascade_network)
+
     loss_CE=nn.CrossEntropyLoss()
     optimizer = optim.SGD(
         cascade_network.parameters(),
         lr=0.001,
         momentum=0.9)
     print(cascade_network)
+
 
     loss_log = []
     for epoch in range(10):
@@ -114,7 +137,7 @@ if __name__ == "__main__":
 
             data,labels = batch_data
             optimizer.zero_grad()
-            forward_result = cascade_network(data,1)
+            forward_result = cascade_network(data)
             loss = loss_CE(forward_result,labels.squeeze())
             loss.backward()
             optimizer.step()
@@ -129,7 +152,7 @@ if __name__ == "__main__":
     total = 0
     for batch_idx, batch_data in enumerate(test_dataloader,start=0):
         data,labels = batch_data
-        prediction = cascade_network(data,1)
+        prediction = cascade_network(data)
         ans = torch.tensor([np.argmax(each.detach().numpy()) for each in prediction])
         # print(ans)
         # print(labels.squeeze())
