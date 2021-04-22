@@ -54,17 +54,17 @@ def data_preprocessing(data_path):
 
 class Cascade_Network(nn.Module):
 
-    def __init__(self,max_used_cascade):
+    def __init__(self,max_used_cascade=10):
         super(Cascade_Network,self).__init__()
         self.input_fcn = nn.Linear(23,10)
         self.output_fcn = nn.Linear(10,4)
 
-        self.used_casacade = 0
+        self.used_neuron = 0
         self.cascade_layers = []
 
 
 
-    def forward(self,x,current_used_cascade):
+    def forward(self,x):
         # x = F.relu(self.input_fcn(x))
         # x = self.output_fcn(x)
         # x = F.softmax(x,dim=1)
@@ -81,7 +81,7 @@ class Cascade_Network(nn.Module):
         return x
 
 
-    def add_cascade(self):
+    def add_neuron(self):
 
         self.cascade_layers.append(nn.Linear(10*(self.used_casacade+1),10))
         self.used_casacade +=1
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     print(train_dataloader.dataset.__len__())
     print(np.array(list(enumerate(train_dataloader.dataset))).shape)
     # print(np.array(list(enumerate(dataloader.dataset)))[0][1])
-    cascade_network = Cascade_Network(3)
+    cascade_network = Cascade_Network(max_used_cascade=3)
     loss_CE=nn.CrossEntropyLoss()
     optimizer = optim.SGD(
         cascade_network.parameters(),
@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
 
     print(f"Final test accuracy: {true_postive*100/total} %")
-    print(f"ratio: {true_postive}/{total}")
+    print(f"tp / total: {true_postive}/{total}")
     print("DONE.")
 
 
