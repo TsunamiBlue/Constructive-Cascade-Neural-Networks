@@ -6,10 +6,11 @@ import torch.utils.data as Data
 import torch.optim as optim
 import torch.nn.functional as F
 
+
 data_csv_path = ["SM_HighBP","SM_Normal","SM_pneumonia","SM_SARS"]
 
 
-def data_preprocessing(data_path):
+def data_preprocessing(data_path,num_feature=23):
     path = os.path.join("sars-cov-1")
     datasets = []
     test_datasets = []
@@ -25,7 +26,7 @@ def data_preprocessing(data_path):
             for line in f.readlines():
                 idx+=1
                 single_data_list = line.strip().split(',')
-                single_data = np.array(single_data_list,dtype=np.float32)
+                single_data = np.array(single_data_list,dtype=np.float32)[:num_feature]
                 if idx < 924:
                     data.append(single_data)
                 else:
@@ -46,7 +47,7 @@ def data_preprocessing(data_path):
     ans_dataset = Data.ConcatDataset(datasets)
     ans_test_dataset = Data.ConcatDataset(test_datasets)
 
-    ans_dataloader = Data.DataLoader(ans_dataset,shuffle=True,batch_size=10)
+    ans_dataloader = Data.DataLoader(ans_dataset,shuffle=True,batch_size=50)
     test_dataloader = Data.DataLoader(ans_test_dataset,shuffle=True,batch_size=10)
 
     return ans_dataloader,test_dataloader
@@ -57,7 +58,7 @@ def correlation_loss(predictions, labels):
     A simple correlation loss function.
     :param predictions: Tensor
     :param labels: Tensor
-    :return: loss (negative of ordinary correlation)
+    :return: ordinary correlation loss
     """
 
     vp = predictions - torch.mean(predictions)
@@ -65,7 +66,7 @@ def correlation_loss(predictions, labels):
 
     # cost = torch.sum(vp * vl) / (torch.sqrt(torch.sum(vp ** 2)) * torch.sqrt(torch.sum(vl ** 2)))
     cost = torch.mean(vp*vl) / (torch.std(predictions)*torch.std(labels))
-    return -cost
+    return cost
 
 
 # Constructive Cascade Neural Network
@@ -138,7 +139,7 @@ class Cascade_Network(nn.Module):
         return
 
 
-    def optimize_correlation(self,dataloader,num_epochs=20, optimizer=None):
+    def optimize_correlation(self,dataloader,num_epochs=10, optimizer=None):
         """
         optimize the correlation between final output error of labels and latest internal output by new neuron.
         :param optimizer: use specified optimizer. default SGD
@@ -146,25 +147,33 @@ class Cascade_Network(nn.Module):
         :param dataloader: sub-data loader to train new input2hidden and hidden2hidden.
         :return: used optimizer
         """
-        print("Start Correlation optimizing...")
+        print("    Start Correlation optimizing...")
         if optimizer is None:
             optimizer = optim.SGD(self.parameters(),lr=0.001,momentum=0.9)
         loss_sub_log = []
         for epoch in range(num_epochs):
             current_loss = float(0)
-            batch_num = 0
+            # batch_num = 0
             for batch_idx, batch_data in enumerate(dataloader,start=0):
                 data, labels = batch_data
                 optimizer.zero_grad()
-                forward_correlation_result = self.forward(data)
-                error = forward_correlation_result-labels
-                loss = correlation_loss(self.latest_hidden_out,error)
+                forward_correlation_result = F.softmax(self.forward(data),dim=1)
+                # labels_extended = labels.expand(forward_correlation_result.shape)
+                labels_extended = torch.zeros(forward_correlation_result.shape)
+                for idx, label in enumerate(labels):
+                    labels_extended[idx][label] = 1
+
+                error = forward_correlation_result-labels_extended
+                # print(forward_correlation_result[0])
+                # print(labels_extended[0])
+                # print(labels[0])
+                loss = -correlation_loss(self.latest_hidden_out,error)
                 loss.backward()
                 optimizer.step()
-                current_loss += loss.item()
-                batch_num+=1
-            loss_sub_log.append(current_loss/batch_num)
-            print(f"sub epoch {epoch} correlation loss: {-current_loss/batch_num}")
+                current_loss = loss.item()
+                # batch_num+=1
+            loss_sub_log.append(current_loss)
+            print(f"    sub epoch {epoch} correlation loss: {-current_loss}")
 
         return optimizer
 
@@ -199,9 +208,34 @@ class Cascade_Network(nn.Module):
         return optimizer
 
 
+def test_accuracy(dataloader,network):
+    # final test set
+    true_postive = 0
+    total = 0
+    for batch_idx, batch_data in enumerate(dataloader, start=0):
+        data, labels = batch_data
+        prediction = F.softmax(network(data), dim=1)
+        # print(prediction.shape)
+        ans = torch.tensor([np.argmax(each.detach().numpy()) for each in prediction])
+        # print("answer vs label")
+        # print(ans)
+        # print(labels.squeeze())
+        labels = labels.squeeze()
+        for i in range(ans.shape[0]):
+            if ans[i] == labels[i]:
+                true_postive += 1
+            total += 1
+    return true_postive, total
+
 
 if __name__ == "__main__":
-    train_dataloader, test_dataloader = data_preprocessing(data_csv_path)
+
+    num_feature = 12
+    n_epochs = 90
+    max_hidden = 10
+
+
+    train_dataloader, test_dataloader = data_preprocessing(data_csv_path,num_feature=num_feature)
     sample = train_dataloader.dataset
     # print(train_dataloader.dataset.__len__())
     print(np.array(list(enumerate(train_dataloader.dataset))).shape)
@@ -210,7 +244,7 @@ if __name__ == "__main__":
     hidden_hidden_layers = nn.ModuleDict()
     hidden_output_layers = nn.ModuleDict()
 
-    cascade_network = Cascade_Network(23,4,input_hidden_layers,hidden_hidden_layers,hidden_output_layers)
+    cascade_network = Cascade_Network(num_feature,4,input_hidden_layers,hidden_hidden_layers,hidden_output_layers)
     print(cascade_network)
 
     loss_CE=nn.CrossEntropyLoss()
@@ -225,72 +259,78 @@ if __name__ == "__main__":
     add_neuron_counter = 0
     previous_loss = float('inf')
 
-    n_epochs = 90
-    max_hidden = 10
+
 
     for epoch in range(n_epochs):
         current_loss = float(0)
         epoch_loss = float(0)
         for batch_idx, batch_data in enumerate(train_dataloader,start=0):
-
             data,labels = batch_data
             optimizer.zero_grad()
-            forward_result = F.softmax(cascade_network(data),dim=1)
+            forward_result = cascade_network(data)
             loss = loss_CE(forward_result,labels.squeeze())
             loss.backward()
             optimizer.step()
-            current_loss += loss.item()
+            current_loss = loss.item()
+            epoch_loss = current_loss
 
-            if batch_idx %100 == 99:
-                current_loss /= 100
-                print(f"epoch {epoch+1} batch No.{batch_idx+1} loss: {current_loss}")
-                epoch_loss = current_loss
-                current_loss = 0
-
+            # if batch_idx %100 == 99:
+            #     current_loss /= 100
+            #     print(f"epoch {epoch+1} batch No.{batch_idx+1} loss: {current_loss}")
+            #     epoch_loss = current_loss
+            #     current_loss = 0
+        print(f"epoch {epoch+1} training loss: {current_loss}")
         #
         if loss_epoch_log != [] and add_neuron_counter == 0 and previous_loss - epoch_loss < 0 \
-            and epoch < n_epochs*0.8 and cascade_network.num_hiddens < max_hidden:
+                and epoch < n_epochs*0.8 and cascade_network.num_hiddens < max_hidden:
 
             cascade_network.add_neuron()
             hidden_neuron_num += 1
-
             add_neuron_counter = 5
 
-            print(f"ADD NEURON in epoch {epoch}.\n There are {cascade_network.num_hiddens} in total")
+            print(f"ADD NEURON in epoch {epoch}. There are {cascade_network.num_hiddens} in total")
             cascade_network.optimize_correlation(train_dataloader)
             optimizer = cascade_network.freeze_neuron(optimizer)
-            print(f"ADD {hidden_neuron_num}th NEURON ends")
+            # print(f"ADD {hidden_neuron_num}th NEURON ends")
 
         previous_loss = epoch_loss
-        loss_epoch_log.append(epoch_loss)
         add_neuron_counter -= 1
         add_neuron_counter = max(add_neuron_counter,0)
 
+        tp,total = test_accuracy(test_dataloader,cascade_network)
+        print(f"epoch {epoch+1} test acc: {tp*100/total} %")
+
+        loss_epoch_log.append((epoch_loss,cascade_network.num_hiddens,tp*100/total))
 
 
-    # final test set
-    true_postive = 0
-    total = 0
-    for batch_idx, batch_data in enumerate(test_dataloader,start=0):
-        data,labels = batch_data
-        prediction = F.softmax(cascade_network(data),dim=1)
-        # print(prediction.shape)
-        ans = torch.tensor([np.argmax(each.detach().numpy()) for each in prediction])
-        print("answer vs label")
-        print(ans)
-        print(labels.squeeze())
-        labels = labels.squeeze()
-        for i in range(ans.shape[0]):
-            if ans[i]==labels[i]:
-                true_postive+=1
-            total+=1
 
 
-    print(f"Final test accuracy: {true_postive*100/total} %")
-    print(f"ratio: {true_postive}/{total}")
+    # # final test set
+    # true_postive = 0
+    # total = 0
+    # for batch_idx, batch_data in enumerate(test_dataloader,start=0):
+    #     data,labels = batch_data
+    #     prediction = F.softmax(cascade_network(data),dim=1)
+    #     # print(prediction.shape)
+    #     ans = torch.tensor([np.argmax(each.detach().numpy()) for each in prediction])
+    #     print("answer vs label")
+    #     print(ans)
+    #     print(labels.squeeze())
+    #     labels = labels.squeeze()
+    #     for i in range(ans.shape[0]):
+    #         if ans[i]==labels[i]:
+    #             true_postive+=1
+    #         total+=1
+    final_true_positive, final_total = test_accuracy(test_dataloader,cascade_network)
+
+
+    print(f"Final test accuracy: {final_true_positive*100/final_total} %")
+    print(f"ratio: {final_true_positive}/{final_total}")
     print(f"overall hidden neuron added: {hidden_neuron_num}")
     print("DONE.")
 
+    for i,item in enumerate(loss_epoch_log):
+        print(i,item)
 
 
 
