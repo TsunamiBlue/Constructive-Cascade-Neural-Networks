@@ -1,0 +1,404 @@
+D:\anacondaS\python.exe D:/COMP4660/ASS/ASS1/cascor_network.py
+(3692, 2)
+Cascade_Network(
+  (initial_input_layer): Linear(in_features=12, out_features=4, bias=True)
+  (input2hidden_layers): ModuleDict()
+  (hidden2hidden_layers): ModuleDict()
+  (hidden2output_layers): ModuleDict()
+)
+epoch 1 training loss: 1.1244442462921143
+epoch 1 test acc: 50.64935064935065 %
+epoch 2 training loss: 1.0037884712219238
+epoch 2 test acc: 50.324675324675326 %
+epoch 3 training loss: 0.9067397117614746
+epoch 3 test acc: 50.324675324675326 %
+epoch 4 training loss: 0.8812831044197083
+epoch 4 test acc: 50.324675324675326 %
+epoch 5 training loss: 0.8184273838996887
+epoch 5 test acc: 50.324675324675326 %
+epoch 6 training loss: 0.79869544506073
+epoch 6 test acc: 50.324675324675326 %
+epoch 7 training loss: 0.7814029455184937
+epoch 7 test acc: 50.324675324675326 %
+epoch 8 training loss: 0.7722808122634888
+epoch 8 test acc: 51.62337662337662 %
+epoch 9 training loss: 0.7677173614501953
+epoch 9 test acc: 50.324675324675326 %
+epoch 10 training loss: 0.7463240623474121
+epoch 10 test acc: 50.64935064935065 %
+epoch 11 training loss: 0.7336594462394714
+epoch 11 test acc: 50.97402597402598 %
+epoch 12 training loss: 0.7403571009635925
+ADD NEURON in epoch 11. There are 1 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.5180518627166748
+    sub epoch 1 correlation loss: 0.5762829184532166
+    sub epoch 2 correlation loss: 0.632123589515686
+    sub epoch 3 correlation loss: 0.561767041683197
+    sub epoch 4 correlation loss: 0.5750746726989746
+    sub epoch 5 correlation loss: 0.5376111268997192
+    sub epoch 6 correlation loss: 0.44242262840270996
+    sub epoch 7 correlation loss: 0.5294381976127625
+    sub epoch 8 correlation loss: 0.8147186040878296
+    sub epoch 9 correlation loss: 0.5014379620552063
+epoch 12 test acc: 73.05194805194805 %
+epoch 13 training loss: 1.141996145248413
+epoch 13 test acc: 73.37662337662337 %
+epoch 14 training loss: 1.0576093196868896
+epoch 14 test acc: 74.02597402597402 %
+epoch 15 training loss: 1.0023959875106812
+epoch 15 test acc: 74.35064935064935 %
+epoch 16 training loss: 0.8242741823196411
+epoch 16 test acc: 74.67532467532467 %
+epoch 17 training loss: 0.7232987284660339
+epoch 17 test acc: 74.67532467532467 %
+epoch 18 training loss: 0.7249258756637573
+ADD NEURON in epoch 17. There are 2 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.31550848484039307
+    sub epoch 1 correlation loss: 0.37717172503471375
+    sub epoch 2 correlation loss: 0.46499788761138916
+    sub epoch 3 correlation loss: 0.4576723873615265
+    sub epoch 4 correlation loss: 0.6245906352996826
+    sub epoch 5 correlation loss: 0.5112144351005554
+    sub epoch 6 correlation loss: 0.5679424405097961
+    sub epoch 7 correlation loss: 0.5671463012695312
+    sub epoch 8 correlation loss: 0.5507038831710815
+    sub epoch 9 correlation loss: 0.5509883761405945
+epoch 18 test acc: 25.0 %
+epoch 19 training loss: 0.9439179301261902
+epoch 19 test acc: 50.0 %
+epoch 20 training loss: 0.748765230178833
+epoch 20 test acc: 53.896103896103895 %
+epoch 21 training loss: 0.7502614259719849
+epoch 21 test acc: 76.62337662337663 %
+epoch 22 training loss: 0.7474857568740845
+epoch 22 test acc: 71.1038961038961 %
+epoch 23 training loss: 0.752288818359375
+ADD NEURON in epoch 22. There are 3 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.6571356654167175
+    sub epoch 1 correlation loss: 0.5697787404060364
+    sub epoch 2 correlation loss: 0.7206335067749023
+    sub epoch 3 correlation loss: 0.7820197343826294
+    sub epoch 4 correlation loss: 0.7329245209693909
+    sub epoch 5 correlation loss: 0.6995065808296204
+    sub epoch 6 correlation loss: 0.7257620692253113
+    sub epoch 7 correlation loss: 0.7739822268486023
+    sub epoch 8 correlation loss: 0.7236170172691345
+    sub epoch 9 correlation loss: 0.7315929532051086
+epoch 23 test acc: 25.0 %
+epoch 24 training loss: 0.7674368619918823
+epoch 24 test acc: 51.62337662337662 %
+epoch 25 training loss: 0.7601290345191956
+epoch 25 test acc: 56.16883116883117 %
+epoch 26 training loss: 0.7643488645553589
+epoch 26 test acc: 51.94805194805195 %
+epoch 27 training loss: 0.7589337229728699
+epoch 27 test acc: 58.44155844155844 %
+epoch 28 training loss: 0.7880359888076782
+ADD NEURON in epoch 27. There are 4 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.7147727608680725
+    sub epoch 1 correlation loss: 0.7696618437767029
+    sub epoch 2 correlation loss: 0.7558449506759644
+    sub epoch 3 correlation loss: 0.7686406373977661
+    sub epoch 4 correlation loss: 0.7261726260185242
+    sub epoch 5 correlation loss: 0.7056417465209961
+    sub epoch 6 correlation loss: 0.7759997844696045
+    sub epoch 7 correlation loss: 0.7930362224578857
+    sub epoch 8 correlation loss: 0.7836256623268127
+    sub epoch 9 correlation loss: 0.7567943930625916
+epoch 28 test acc: 25.0 %
+epoch 29 training loss: 0.7617068290710449
+epoch 29 test acc: 65.58441558441558 %
+epoch 30 training loss: 0.7594872713088989
+epoch 30 test acc: 88.31168831168831 %
+epoch 31 training loss: 0.7656711339950562
+epoch 31 test acc: 78.57142857142857 %
+epoch 32 training loss: 0.7607582807540894
+epoch 32 test acc: 75.0 %
+epoch 33 training loss: 0.7537781596183777
+epoch 33 test acc: 75.0 %
+epoch 34 training loss: 0.7460715174674988
+epoch 34 test acc: 76.94805194805195 %
+epoch 35 training loss: 0.7509560585021973
+ADD NEURON in epoch 34. There are 5 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.6870771646499634
+    sub epoch 1 correlation loss: 0.714655876159668
+    sub epoch 2 correlation loss: 0.7062352895736694
+    sub epoch 3 correlation loss: 0.7468119263648987
+    sub epoch 4 correlation loss: 0.7265275120735168
+    sub epoch 5 correlation loss: 0.7927660942077637
+    sub epoch 6 correlation loss: 0.7592906355857849
+    sub epoch 7 correlation loss: 0.7620787024497986
+    sub epoch 8 correlation loss: 0.7891404032707214
+    sub epoch 9 correlation loss: 0.7568539381027222
+epoch 35 test acc: 25.0 %
+epoch 36 training loss: 0.8338362574577332
+epoch 36 test acc: 50.0 %
+epoch 37 training loss: 0.7569152116775513
+epoch 37 test acc: 50.0 %
+epoch 38 training loss: 0.6744171380996704
+epoch 38 test acc: 50.0 %
+epoch 39 training loss: 0.7281985282897949
+epoch 39 test acc: 50.0 %
+epoch 40 training loss: 0.7328316569328308
+ADD NEURON in epoch 39. There are 6 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.6780509352684021
+    sub epoch 1 correlation loss: 0.7236557006835938
+    sub epoch 2 correlation loss: 0.7275933027267456
+    sub epoch 3 correlation loss: 0.7119899988174438
+    sub epoch 4 correlation loss: 0.7341302037239075
+    sub epoch 5 correlation loss: 0.721183180809021
+    sub epoch 6 correlation loss: 0.7517822980880737
+    sub epoch 7 correlation loss: 0.7645705938339233
+    sub epoch 8 correlation loss: 0.7731110453605652
+    sub epoch 9 correlation loss: 0.764819324016571
+epoch 40 test acc: 25.0 %
+epoch 41 training loss: 0.7432185411453247
+epoch 41 test acc: 59.09090909090909 %
+epoch 42 training loss: 0.6961581110954285
+epoch 42 test acc: 50.0 %
+epoch 43 training loss: 0.7265827059745789
+epoch 43 test acc: 50.0 %
+epoch 44 training loss: 0.7253672480583191
+epoch 44 test acc: 51.94805194805195 %
+epoch 45 training loss: 0.7394784092903137
+ADD NEURON in epoch 44. There are 7 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.4151182770729065
+    sub epoch 1 correlation loss: 0.5349780321121216
+    sub epoch 2 correlation loss: 0.6166983842849731
+    sub epoch 3 correlation loss: 0.6128647923469543
+    sub epoch 4 correlation loss: 0.5933882594108582
+    sub epoch 5 correlation loss: 0.6574801802635193
+    sub epoch 6 correlation loss: 0.6885979771614075
+    sub epoch 7 correlation loss: 0.743851900100708
+    sub epoch 8 correlation loss: 0.7068948745727539
+    sub epoch 9 correlation loss: 0.6700968146324158
+epoch 45 test acc: 25.0 %
+epoch 46 training loss: 0.7353495359420776
+epoch 46 test acc: 54.87012987012987 %
+epoch 47 training loss: 0.7162157893180847
+epoch 47 test acc: 51.298701298701296 %
+epoch 48 training loss: 0.7997939586639404
+epoch 48 test acc: 53.57142857142857 %
+epoch 49 training loss: 0.7269934415817261
+epoch 49 test acc: 75.32467532467533 %
+epoch 50 training loss: 0.6815828680992126
+epoch 50 test acc: 52.5974025974026 %
+epoch 51 training loss: 0.7070592045783997
+ADD NEURON in epoch 50. There are 8 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.6217979788780212
+    sub epoch 1 correlation loss: 0.7021333575248718
+    sub epoch 2 correlation loss: 0.7098711729049683
+    sub epoch 3 correlation loss: 0.7291978001594543
+    sub epoch 4 correlation loss: 0.7486453056335449
+    sub epoch 5 correlation loss: 0.7329404354095459
+    sub epoch 6 correlation loss: 0.7390148639678955
+    sub epoch 7 correlation loss: 0.7571964263916016
+    sub epoch 8 correlation loss: 0.6983702778816223
+    sub epoch 9 correlation loss: 0.7107646465301514
+epoch 51 test acc: 25.0 %
+epoch 52 training loss: 0.7228204011917114
+epoch 52 test acc: 50.324675324675326 %
+epoch 53 training loss: 0.6819073557853699
+epoch 53 test acc: 71.1038961038961 %
+epoch 54 training loss: 0.699809730052948
+epoch 54 test acc: 73.05194805194805 %
+epoch 55 training loss: 0.6742730140686035
+epoch 55 test acc: 69.15584415584415 %
+epoch 56 training loss: 0.6801689863204956
+ADD NEURON in epoch 55. There are 9 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.6278780698776245
+    sub epoch 1 correlation loss: 0.6394954323768616
+    sub epoch 2 correlation loss: 0.695040762424469
+    sub epoch 3 correlation loss: 0.7262465357780457
+    sub epoch 4 correlation loss: 0.7472820281982422
+    sub epoch 5 correlation loss: 0.7244766354560852
+    sub epoch 6 correlation loss: 0.7241464853286743
+    sub epoch 7 correlation loss: 0.7218425273895264
+    sub epoch 8 correlation loss: 0.7603489756584167
+    sub epoch 9 correlation loss: 0.7213082313537598
+epoch 56 test acc: 25.0 %
+epoch 57 training loss: 0.7165195941925049
+epoch 57 test acc: 65.58441558441558 %
+epoch 58 training loss: 0.7230090498924255
+epoch 58 test acc: 75.0 %
+epoch 59 training loss: 0.6888209581375122
+epoch 59 test acc: 70.45454545454545 %
+epoch 60 training loss: 0.7384757995605469
+epoch 60 test acc: 50.0 %
+epoch 61 training loss: 0.6952845454216003
+epoch 61 test acc: 50.0 %
+epoch 62 training loss: 0.68565434217453
+epoch 62 test acc: 88.63636363636364 %
+epoch 63 training loss: 0.6867768168449402
+ADD NEURON in epoch 62. There are 10 in total
+    Start Correlation optimizing...
+    sub epoch 0 correlation loss: 0.7366700172424316
+    sub epoch 1 correlation loss: 0.7351329326629639
+    sub epoch 2 correlation loss: 0.7524149417877197
+    sub epoch 3 correlation loss: 0.7480807900428772
+    sub epoch 4 correlation loss: 0.7703500986099243
+    sub epoch 5 correlation loss: 0.7331697344779968
+    sub epoch 6 correlation loss: 0.7116352319717407
+    sub epoch 7 correlation loss: 0.7448120713233948
+    sub epoch 8 correlation loss: 0.750207781791687
+    sub epoch 9 correlation loss: 0.7327600717544556
+epoch 63 test acc: 25.0 %
+epoch 64 training loss: 0.7831038236618042
+epoch 64 test acc: 50.0 %
+epoch 65 training loss: 0.7297381162643433
+epoch 65 test acc: 50.0 %
+epoch 66 training loss: 0.6240578293800354
+epoch 66 test acc: 50.0 %
+epoch 67 training loss: 0.6770213842391968
+epoch 67 test acc: 92.85714285714286 %
+epoch 68 training loss: 0.6309996843338013
+epoch 68 test acc: 56.493506493506494 %
+epoch 69 training loss: 0.6855440139770508
+epoch 69 test acc: 69.15584415584415 %
+epoch 70 training loss: 0.7109761238098145
+epoch 70 test acc: 55.51948051948052 %
+epoch 71 training loss: 0.6992776989936829
+epoch 71 test acc: 55.84415584415584 %
+epoch 72 training loss: 0.6794219017028809
+epoch 72 test acc: 55.84415584415584 %
+epoch 73 training loss: 0.639586329460144
+epoch 73 test acc: 50.0 %
+epoch 74 training loss: 0.6826006770133972
+epoch 74 test acc: 50.0 %
+epoch 75 training loss: 0.691344141960144
+epoch 75 test acc: 75.0 %
+epoch 76 training loss: 0.6818766593933105
+epoch 76 test acc: 76.2987012987013 %
+epoch 77 training loss: 0.6620934009552002
+epoch 77 test acc: 50.0 %
+epoch 78 training loss: 0.6625514030456543
+epoch 78 test acc: 50.64935064935065 %
+epoch 79 training loss: 0.6894592046737671
+epoch 79 test acc: 77.59740259740259 %
+epoch 80 training loss: 0.664445698261261
+epoch 80 test acc: 78.24675324675324 %
+epoch 81 training loss: 0.6842440366744995
+epoch 81 test acc: 52.5974025974026 %
+epoch 82 training loss: 0.8043121099472046
+epoch 82 test acc: 64.93506493506493 %
+epoch 83 training loss: 0.6539562940597534
+epoch 83 test acc: 50.0 %
+epoch 84 training loss: 0.6531639099121094
+epoch 84 test acc: 66.55844155844156 %
+epoch 85 training loss: 0.6709082126617432
+epoch 85 test acc: 74.35064935064935 %
+epoch 86 training loss: 0.6900674104690552
+epoch 86 test acc: 75.0 %
+epoch 87 training loss: 0.6658157110214233
+epoch 87 test acc: 50.324675324675326 %
+epoch 88 training loss: 0.6645835041999817
+epoch 88 test acc: 50.0 %
+epoch 89 training loss: 0.6741235852241516
+epoch 89 test acc: 75.0 %
+epoch 90 training loss: 0.6535807251930237
+epoch 90 test acc: 71.1038961038961 %
+Final test accuracy: 71.1038961038961 %
+ratio: 219/308
+overall hidden neuron added: 10
+DONE.
+0 (1.1244442462921143, 0, 50.64935064935065)
+1 (1.0037884712219238, 0, 50.324675324675326)
+2 (0.9067397117614746, 0, 50.324675324675326)
+3 (0.8812831044197083, 0, 50.324675324675326)
+4 (0.8184273838996887, 0, 50.324675324675326)
+5 (0.79869544506073, 0, 50.324675324675326)
+6 (0.7814029455184937, 0, 50.324675324675326)
+7 (0.7722808122634888, 0, 51.62337662337662)
+8 (0.7677173614501953, 0, 50.324675324675326)
+9 (0.7463240623474121, 0, 50.64935064935065)
+10 (0.7336594462394714, 0, 50.97402597402598)
+11 (0.7403571009635925, 1, 73.05194805194805)
+12 (1.141996145248413, 1, 73.37662337662337)
+13 (1.0576093196868896, 1, 74.02597402597402)
+14 (1.0023959875106812, 1, 74.35064935064935)
+15 (0.8242741823196411, 1, 74.67532467532467)
+16 (0.7232987284660339, 1, 74.67532467532467)
+17 (0.7249258756637573, 2, 25.0)
+18 (0.9439179301261902, 2, 50.0)
+19 (0.748765230178833, 2, 53.896103896103895)
+20 (0.7502614259719849, 2, 76.62337662337663)
+21 (0.7474857568740845, 2, 71.1038961038961)
+22 (0.752288818359375, 3, 25.0)
+23 (0.7674368619918823, 3, 51.62337662337662)
+24 (0.7601290345191956, 3, 56.16883116883117)
+25 (0.7643488645553589, 3, 51.94805194805195)
+26 (0.7589337229728699, 3, 58.44155844155844)
+27 (0.7880359888076782, 4, 25.0)
+28 (0.7617068290710449, 4, 65.58441558441558)
+29 (0.7594872713088989, 4, 88.31168831168831)
+30 (0.7656711339950562, 4, 78.57142857142857)
+31 (0.7607582807540894, 4, 75.0)
+32 (0.7537781596183777, 4, 75.0)
+33 (0.7460715174674988, 4, 76.94805194805195)
+34 (0.7509560585021973, 5, 25.0)
+35 (0.8338362574577332, 5, 50.0)
+36 (0.7569152116775513, 5, 50.0)
+37 (0.6744171380996704, 5, 50.0)
+38 (0.7281985282897949, 5, 50.0)
+39 (0.7328316569328308, 6, 25.0)
+40 (0.7432185411453247, 6, 59.09090909090909)
+41 (0.6961581110954285, 6, 50.0)
+42 (0.7265827059745789, 6, 50.0)
+43 (0.7253672480583191, 6, 51.94805194805195)
+44 (0.7394784092903137, 7, 25.0)
+45 (0.7353495359420776, 7, 54.87012987012987)
+46 (0.7162157893180847, 7, 51.298701298701296)
+47 (0.7997939586639404, 7, 53.57142857142857)
+48 (0.7269934415817261, 7, 75.32467532467533)
+49 (0.6815828680992126, 7, 52.5974025974026)
+50 (0.7070592045783997, 8, 25.0)
+51 (0.7228204011917114, 8, 50.324675324675326)
+52 (0.6819073557853699, 8, 71.1038961038961)
+53 (0.699809730052948, 8, 73.05194805194805)
+54 (0.6742730140686035, 8, 69.15584415584415)
+55 (0.6801689863204956, 9, 25.0)
+56 (0.7165195941925049, 9, 65.58441558441558)
+57 (0.7230090498924255, 9, 75.0)
+58 (0.6888209581375122, 9, 70.45454545454545)
+59 (0.7384757995605469, 9, 50.0)
+60 (0.6952845454216003, 9, 50.0)
+61 (0.68565434217453, 9, 88.63636363636364)
+62 (0.6867768168449402, 10, 25.0)
+63 (0.7831038236618042, 10, 50.0)
+64 (0.7297381162643433, 10, 50.0)
+65 (0.6240578293800354, 10, 50.0)
+66 (0.6770213842391968, 10, 92.85714285714286)
+67 (0.6309996843338013, 10, 56.493506493506494)
+68 (0.6855440139770508, 10, 69.15584415584415)
+69 (0.7109761238098145, 10, 55.51948051948052)
+70 (0.6992776989936829, 10, 55.84415584415584)
+71 (0.6794219017028809, 10, 55.84415584415584)
+72 (0.639586329460144, 10, 50.0)
+73 (0.6826006770133972, 10, 50.0)
+74 (0.691344141960144, 10, 75.0)
+75 (0.6818766593933105, 10, 76.2987012987013)
+76 (0.6620934009552002, 10, 50.0)
+77 (0.6625514030456543, 10, 50.64935064935065)
+78 (0.6894592046737671, 10, 77.59740259740259)
+79 (0.664445698261261, 10, 78.24675324675324)
+80 (0.6842440366744995, 10, 52.5974025974026)
+81 (0.8043121099472046, 10, 64.93506493506493)
+82 (0.6539562940597534, 10, 50.0)
+83 (0.6531639099121094, 10, 66.55844155844156)
+84 (0.6709082126617432, 10, 74.35064935064935)
+85 (0.6900674104690552, 10, 75.0)
+86 (0.6658157110214233, 10, 50.324675324675326)
+87 (0.6645835041999817, 10, 50.0)
+88 (0.6741235852241516, 10, 75.0)
+89 (0.6535807251930237, 10, 71.1038961038961)
+
+Process finished with exit code 0
