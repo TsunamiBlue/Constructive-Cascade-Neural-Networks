@@ -47,7 +47,7 @@ def data_preprocessing(data_path,num_feature=23):
     ans_dataset = Data.ConcatDataset(datasets)
     ans_test_dataset = Data.ConcatDataset(test_datasets)
 
-    ans_dataloader = Data.DataLoader(ans_dataset,shuffle=True,batch_size=50)
+    ans_dataloader = Data.DataLoader(ans_dataset,shuffle=True,batch_size=20)
     test_dataloader = Data.DataLoader(ans_test_dataset,shuffle=True,batch_size=10)
 
     return ans_dataloader,test_dataloader
@@ -116,7 +116,8 @@ class Cascade_Network(nn.Module):
 
         # Connect hidden layer to output
         final_out = input_out
-        hidden2out_idx = 0  # record the index of hidden2output_layers
+        # record the index of hidden2output_layers
+        hidden2out_idx = 0
         for h in H_in:
             final_out = final_out + self.hidden2output_layers[str(hidden2out_idx)](h)
             hidden2out_idx += 1
@@ -202,8 +203,6 @@ class Cascade_Network(nn.Module):
                     # hidden2hidden
                     {'params': self.hidden2hidden_layers[str(i)].parameters(), 'lr': 0},
                 )
-        # print(params)
-        # self.parameters = params
         optimizer = torch.optim.SGD(params, momentum=0.9,lr=0.001)
         return optimizer
 
@@ -305,107 +304,23 @@ if __name__ == "__main__":
 
 
 
-    # # final test set
-    # true_postive = 0
-    # total = 0
-    # for batch_idx, batch_data in enumerate(test_dataloader,start=0):
-    #     data,labels = batch_data
-    #     prediction = F.softmax(cascade_network(data),dim=1)
-    #     # print(prediction.shape)
-    #     ans = torch.tensor([np.argmax(each.detach().numpy()) for each in prediction])
-    #     print("answer vs label")
-    #     print(ans)
-    #     print(labels.squeeze())
-    #     labels = labels.squeeze()
-    #     for i in range(ans.shape[0]):
-    #         if ans[i]==labels[i]:
-    #             true_postive+=1
-    #         total+=1
+
     final_true_positive, final_total = test_accuracy(test_dataloader,cascade_network)
 
 
-    print(f"Final test accuracy: {final_true_positive*100/final_total} %")
+
+    # additional loss log here
+    print(f"Additional Loss Log \n  Loss Log Format: epoch, loss, number of hidden neurons, accuracy")
+    for i,item in enumerate(loss_epoch_log):
+        print(i+1,item)
+
+    # final performance
+    print(f"Final test accuracy: {final_true_positive * 100 / final_total} %")
     print(f"ratio: {final_true_positive}/{final_total}")
     print(f"overall hidden neuron added: {hidden_neuron_num}")
     print("DONE.")
 
-    for i,item in enumerate(loss_epoch_log):
-        print(i,item)
 
-
-
-# if __name__ == "__main__":
-#     train_dataloader, test_dataloader = data_preprocessing(data_csv_path)
-#     sample = train_dataloader.dataset
-#     print(train_dataloader.dataset.__len__())
-#     print(np.array(list(enumerate(train_dataloader.dataset))).shape)
-#     # print(np.array(list(enumerate(dataloader.dataset)))[0][1])
-#
-#     input2hidden_layers = nn.ModuleDict()
-#     hidden2hidden_layers = nn.ModuleDict()
-#     hidden2output_layers = nn.ModuleDict()
-#
-#     cascade_network = Cascade_Network(23,4,input2hidden_layers,hidden2hidden_layers,hidden2output_layers)
-#     print(cascade_network)
-#
-#     loss_CE=nn.CrossEntropyLoss()
-#     optimizer = optim.SGD(
-#         cascade_network.parameters(),
-#         lr=0.001,
-#         momentum=0.9)
-#     print(cascade_network)
-#
-#
-#     loss_log = []
-#     loss_epoch_log = []
-#     hidden_neuron_num = 0
-#     for epoch in range(10):
-#         current_loss = float(0)
-#         accumulate_loss = float(0)
-#         for batch_idx, batch_data in enumerate(train_dataloader,start=0):
-#
-#             data,labels = batch_data
-#             optimizer.zero_grad()
-#             forward_result = cascade_network(data)
-#             loss = loss_CE(forward_result,labels.squeeze())
-#             loss.backward()
-#             optimizer.step()
-#             current_loss += loss.item()
-#
-#             if batch_idx %100 == 99:
-#                 print(f"epoch {epoch+1} batch No.{batch_idx+1} loss: {current_loss/100}")
-#                 loss_log.append(current_loss/100)
-#                 accumulate_loss = current_loss/100
-#                 current_loss = 0
-#
-#         if loss_epoch_log != [] and loss_epoch_log[-1] - accumulate_loss > 0.005:
-#             cascade_network.add_neuron()
-#             hidden_neuron_num += 1
-#             print(f"ADD ONE NEURON in epoch {epoch}.")
-#
-#
-#         loss_epoch_log.append(accumulate_loss)
-#
-#     # final test set
-#     true_postive = 0
-#     total = 0
-#     for batch_idx, batch_data in enumerate(test_dataloader,start=0):
-#         data,labels = batch_data
-#         prediction = cascade_network(data)
-#         ans = torch.tensor([np.argmax(F.softmax(each).detach().numpy()) for each in prediction])
-#         # print(ans)
-#         # print(labels.squeeze())
-#         labels = labels.squeeze()
-#         for i in range(ans.shape[0]):
-#             if ans[i]==labels[i]:
-#                 true_postive+=1
-#             total+=1
-#
-#
-#     print(f"Final test accuracy: {true_postive*100/total} %")
-#     print(f"ratio: {true_postive}/{total}")
-#     print(f"overall hidden neuron added: {hidden_neuron_num}")
-#     print("DONE.")
 
 
 
